@@ -4,7 +4,9 @@ from tower import BasicTower, SniperTower
 
 
 class Level:
+    '''Управляет уровнем игры, волнами врагов и расстановкой башен.'''
     def __init__(self, game):
+        '''Инициализирует уровень игры.'''
         self.game = game
         self.enemies = pygame.sprite.Group()
         self.towers = pygame.sprite.Group()
@@ -19,22 +21,27 @@ class Level:
         self.spawn_delay = 1000
         self.last_spawn_time = pygame.time.get_ticks()
         self.all_waves_complete = False
-        self.start_next_wave()
+        #self.start_next_wave()
         self.font = pygame.font.SysFont("Arial", 24)
 
     def start_next_wave(self):
+        '''Запускает следующую волну врагов.'''
         if self.current_wave < len(self.waves):
             self.spawned_enemies = 0
             self.spawn_next_enemy()
+            self.game.shoot_sound.play()
 
     def spawn_next_enemy(self):
+        '''Генерирует следующего врага текущей волны.'''
         if self.spawned_enemies < len(self.waves[self.current_wave]):
             enemy_info = self.waves[self.current_wave][self.spawned_enemies]
             new_enemy = Enemy(**enemy_info, game=self.game)
             self.enemies.add(new_enemy)
             self.spawned_enemies += 1
+            self.game.enemy_hit_sound.play()
 
     def attempt_place_tower(self, mouse_pos, tower_type):
+        '''Пытается разместить башню выбранного типа в позиции курсора.'''
         tower_classes = {'basic': BasicTower, 'sniper': SniperTower}
         if tower_type in tower_classes and self.game.settings.starting_money >= self.game.settings.tower_cost:
             grid_pos = self.game.grid.get_grid_position(mouse_pos)
@@ -49,6 +56,7 @@ class Level:
             print("Not enough money or unknown tower type.")
 
     def update(self):
+        '''Обновляет состояние уровня, врагов, башен и пуль.'''
         current_time = pygame.time.get_ticks()
 
         if self.current_wave < len(self.waves) and self.spawned_enemies < len(self.waves[self.current_wave]):
@@ -59,11 +67,13 @@ class Level:
                 self.enemies.add(new_enemy)
                 self.spawned_enemies += 1
                 self.last_spawn_time = current_time
+                self.game.enemy_hit_sound.play()
 
         collisions = pygame.sprite.groupcollide(self.bullets, self.enemies, True, False)
         for bullet in collisions:
             for enemy in collisions[bullet]:
                 enemy.take_damage(bullet.damage)
+                self.game.enemy_hit_sound.play()
 
         self.enemies.update()
         for tower in self.towers:
@@ -75,13 +85,16 @@ class Level:
             self.start_next_wave()
         elif len(self.enemies) == 0 and self.current_wave == len(self.waves) - 1:
             self.all_waves_complete = True
+            self.game.game_over_sound.play()
 
     def draw_path(self, screen):
+        '''Отображает путь врагов.'''
         pygame.draw.lines(screen, (0, 128, 0), False, self.game.settings.enemy_path, 5)
         for pos in self.game.settings.tower_positions:
             pygame.draw.circle(screen, (128, 0, 0), pos, 10)
 
     def draw(self, screen):
+        '''Отрисовывает уровень, включая врагов, башни и пули.'''
         self.draw_path(screen)
         self.enemies.draw(screen)
         self.towers.draw(screen)

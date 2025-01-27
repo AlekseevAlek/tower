@@ -3,7 +3,9 @@ from pygame.math import Vector2
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, path, speed=2, health=10, image_path=None, game = None):
+    '''Базовый класс для врагов в игре. '''
+    def __init__(self, path, speed=2, health=10, image_path=None, game=None):
+        '''Инициализирует нового врага.'''
 
         super().__init__()
         self.image = pygame.Surface((30, 40))
@@ -18,11 +20,13 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center = self.position
 
     def take_damage(self, amount):
+        '''Уменьшает здоровье врага на указанное количество.'''
         self.health -= amount
         if self.health <= 0:
             self.kill()
 
     def update(self):
+        '''Обновляет положение и движение врага по заданному пути.'''
         if self.path_index < len(self.path) - 1:
             start_point = Vector2(self.path[self.path_index])
             end_point = Vector2(self.path[self.path_index + 1])
