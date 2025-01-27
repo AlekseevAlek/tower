@@ -65,4 +65,4 @@ class BasicTower(Tower) и class SniperTower(Tower): Конкретные реа
 
 ![Image alt](https://github.com/AlekseevAlek/tower/blob/master/сетка%20не%20отображается.png)
 
-![Image alt]()
+![Image alt](https://github.com/AlekseevAlek/tower/blob/master/сетка%20отображается.png)
