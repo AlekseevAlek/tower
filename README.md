@@ -66,3 +66,7 @@ class BasicTower(Tower) и class SniperTower(Tower): Конкретные реа
 ![Image alt](https://github.com/AlekseevAlek/tower/blob/master/сетка%20не%20отображается.png)
 
 ![Image alt](https://github.com/AlekseevAlek/tower/blob/master/сетка%20отображается.png)
+
+Задача №2. Добавить звуки к выстрелам и появлению врагов.
+
+В игру добавлены звуки.
