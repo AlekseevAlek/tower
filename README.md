@@ -63,6 +63,6 @@ class BasicTower(Tower) и class SniperTower(Tower): Конкретные реа
 
 Примеры работы програмы:
 
-![Image alt]()
+![Image alt](https://github.com/AlekseevAlek/tower/blob/master/сетка%20не%20отображается.png)
 
 ![Image alt]()
