@@ -59,6 +59,9 @@ class TowerDefenseGame:
                 elif event.key == pygame.K_SPACE:
                     self.show_positions = not self.show_positions
                     print("Toggle tower positions visibility.")
+                elif event.key == pygame.K_3:
+                    self.selected_tower_type = 'money'
+                    print("A tower for generating money has been selected.")
 
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if self.selected_tower_type:

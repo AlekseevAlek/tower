@@ -19,6 +19,7 @@ class Tower(pygame.sprite.Sprite):
         self.last_shot_time = pygame.time.get_ticks()
         self.level = 1
         self.original_image = self.image
+        self.tower_type = None
 
     def upgrade_cost(self):
         '''Вычисляет стоимость улучшения башни на текущем уровне.'''
@@ -129,3 +130,31 @@ class SniperTower(Tower):
         '''Создает новую пулю и добавляет ее в группу пуль.'''
         new_bullet = Bullet(self.position, target.position, self.damage, self.game)
         bullets_group.add(new_bullet)
+
+
+class MoneyGeneratingTower(Tower):
+    '''Башня которая генерирует деньги.'''
+    def __init__(self, position, game):
+        ''' Инициализирует объект MoneyGeneratingTower'''
+        super().__init__(position, game)
+        self.image = pygame.image.load('assets/towers/towerDefense_tile203.png').convert_alpha()
+        self.original_image = self.image
+        self.rect = self.image.get_rect(center=self.position)
+        self.tower_range = 100
+        self.damage = 0
+        self.rate_of_fire = 0
+        self.money_generation_rate = 5  # Скорость генерации денег в секунду
+        self.last_money_generation_time = pygame.time.get_ticks()
+
+    def update(self, enemies, current_time, bullets_group):
+        ''' Обновляет состояние башни.'''
+        super().update(enemies, current_time, bullets_group)
+
+        current_time = pygame.time.get_ticks()
+        time_passed = (current_time - self.last_money_generation_time) / 1000  # Преобразование в секунды
+
+        money_generated = time_passed * self.money_generation_rate
+        self.game.settings.starting_money += money_generated
+        self.last_money_generation_time = current_time
+
+
